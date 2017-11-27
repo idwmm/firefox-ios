@@ -61,6 +61,9 @@ import Storage
 protocol TabEventHandler {
     func tab(_ tab: Tab, didLoadPageMetadata metadata: PageMetadata)
     func tab(_ tab: Tab, didLoadFavicon favicon: Favicon)
+    func tabDidGainFocus(_ tab: Tab)
+    func tabDidLoseFocus(_ tab: Tab)
+    func tabDidClose(_ tab: Tab)
 }
 
 // Provide default implmentations, because we don't want to litter the code with
@@ -68,23 +71,38 @@ protocol TabEventHandler {
 extension TabEventHandler {
     func tab(_ tab: Tab, didLoadPageMetadata metadata: PageMetadata) {}
     func tab(_ tab: Tab, didLoadFavicon favicon: Favicon) {}
+    func tabDidGainFocus(_ tab: Tab) {}
+    func tabDidLoseFocus(_ tab: Tab) {}
+    func tabDidClose(_ tab: Tab) {}
 }
 
 enum TabEventLabel: String {
     case didLoadPageMetadata = "didLoadPageMetadata"
     case didLoadFavicon = "didLoadFavicon"
+    case didGainFocus = "didGainFocus"
+    case didLoseFocus = "didLoseFocus"
+    case didClose = "didClose"
 }
 
 enum TabEvent {
     case didLoadPageMetadata(PageMetadata)
     case didLoadFavicon(Favicon)
-    
+    case didGainFocus
+    case didLoseFocus
+    case didClose
+
     var label: TabEventLabel {
         switch self {
         case .didLoadPageMetadata:
             return .didLoadPageMetadata
         case .didLoadFavicon:
             return .didLoadFavicon
+        case .didGainFocus:
+            return .didGainFocus
+        case .didLoseFocus:
+            return .didLoseFocus
+        case .didClose:
+            return .didClose
         }
     }
     
@@ -94,6 +112,12 @@ enum TabEvent {
             handler.tab(tab, didLoadPageMetadata: metadata)
         case .didLoadFavicon(let favicon):
             handler.tab(tab, didLoadFavicon: favicon)
+        case .didGainFocus:
+            handler.tabDidGainFocus(tab)
+        case .didLoseFocus:
+            handler.tabDidLoseFocus(tab)
+        case .didClose:
+            handler.tabDidClose(tab)
         }
     }
 }
