@@ -322,7 +322,7 @@ class BrowserUtils {
         EarlGrey.select(elementWithMatcher:settings_button).perform(grey_tap())
         EarlGrey.select(elementWithMatcher: grey_accessibilityLabel("Clear Private Data"))
             .using(searchAction: grey_scrollInDirection(.down, 200),
-                   onElementWithMatcher: grey_kindOfClass(UITableView.self))
+                   onElementWithMatcher: grey_accessibilityID("AppSettingsTableViewController.tableView"))
             .assert(grey_notNil())
         EarlGrey.select(elementWithMatcher:grey_accessibilityLabel("Clear Private Data")).perform(grey_tap())
     }
